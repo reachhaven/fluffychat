@@ -6,6 +6,7 @@
 import 'package:emoji_picker_flutter/locales/default_emoji_set_locale.dart';
 import 'package:fluffychat/config/setting_keys.dart';
 import 'package:fluffychat/l10n/l10n.dart';
+import 'package:fluffychat/pages/chat/composer_preview.dart';
 import 'package:fluffychat/pages/chat/recording_input_row.dart';
 import 'package:fluffychat/pages/chat/recording_view_model.dart';
 import 'package:fluffychat/utils/other_party_can_receive.dart';
@@ -47,6 +48,9 @@ class ChatInputRow extends StatelessWidget {
         ),
       );
     }
+
+    final previewReplacesInput =
+        controller.showComposerPreview && !FluffyThemes.isColumnMode(context);
 
     final selectedTextButtonStyle = TextButton.styleFrom(
       foregroundColor: theme.colorScheme.onTertiaryContainer,
@@ -278,56 +282,86 @@ class ChatInputRow extends StatelessWidget {
                       alignment: Alignment.center,
                       child: _ChatAccountPicker(controller),
                     ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 2.0),
-                      child: InputBar(
-                        room: controller.room,
-                        minLines: 1,
-                        maxLines: 8,
-                        autofocus: !PlatformInfos.isMobile,
-                        keyboardType: TextInputType.multiline,
-                        textInputAction:
-                            AppSettings.sendOnEnter.value == true &&
-                                PlatformInfos.isMobile
-                            ? TextInputAction.send
-                            : null,
-                        onSubmitted: controller.onInputBarSubmitted,
-                        onSubmitImage: controller.sendImageFromClipBoard,
-                        focusNode: controller.inputFocus,
-                        controller: controller.sendController,
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.only(
-                            left: 6.0,
-                            right: 6.0,
-                            bottom: 6.0,
-                            top: 3.0,
-                          ),
-                          counter: const SizedBox.shrink(),
-                          hintText: controller.room.encrypted
-                              ? L10n.of(context).encryptedMessage
-                              : L10n.of(context).unencryptedMessage,
-                          hintMaxLines: 1,
-                          border: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          filled: false,
-                        ),
-                        onChanged: controller.onInputBarChanged,
-                        suggestionEmojis:
-                            getDefaultEmojiLocale(
-                              AppSettings.emojiSuggestionLocale.value.isNotEmpty
-                                  ? Locale(
-                                      AppSettings.emojiSuggestionLocale.value,
-                                    )
-                                  : Localizations.localeOf(context),
-                            ).fold(
-                              [],
-                              (emojis, category) =>
-                                  emojis..addAll(category.emoji),
+                  if (!previewReplacesInput)
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 2.0),
+                        child: InputBar(
+                          room: controller.room,
+                          minLines: 1,
+                          maxLines: 8,
+                          autofocus: !PlatformInfos.isMobile,
+                          keyboardType: TextInputType.multiline,
+                          textInputAction:
+                              AppSettings.sendOnEnter.value == true &&
+                                  PlatformInfos.isMobile
+                              ? TextInputAction.send
+                              : null,
+                          onSubmitted: controller.onInputBarSubmitted,
+                          onSubmitImage: controller.sendImageFromClipBoard,
+                          focusNode: controller.inputFocus,
+                          controller: controller.sendController,
+                          decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.only(
+                              left: 6.0,
+                              right: 6.0,
+                              bottom: 6.0,
+                              top: 3.0,
                             ),
+                            counter: const SizedBox.shrink(),
+                            hintText: controller.room.encrypted
+                                ? L10n.of(context).encryptedMessage
+                                : L10n.of(context).unencryptedMessage,
+                            hintMaxLines: 1,
+                            border: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            filled: false,
+                          ),
+                          onChanged: controller.onInputBarChanged,
+                          suggestionEmojis:
+                              getDefaultEmojiLocale(
+                                AppSettings
+                                        .emojiSuggestionLocale
+                                        .value
+                                        .isNotEmpty
+                                    ? Locale(
+                                        AppSettings.emojiSuggestionLocale.value,
+                                      )
+                                    : Localizations.localeOf(context),
+                              ).fold(
+                                [],
+                                (emojis, category) =>
+                                    emojis..addAll(category.emoji),
+                              ),
+                        ),
                       ),
                     ),
-                  ),
+                  if (controller.showComposerPreview)
+                    Expanded(
+                      child: ComposerPreview(
+                        room: controller.room,
+                        controller: controller.sendController,
+                      ),
+                    ),
+                  if (controller.sendController.text.isNotEmpty ||
+                      controller.showComposerPreview)
+                    Container(
+                      height: height,
+                      width: 48,
+                      alignment: Alignment.center,
+                      child: IconButton(
+                        tooltip: controller.showComposerPreview
+                            ? L10n.of(context).edit
+                            : L10n.of(context).preview,
+                        color: theme.colorScheme.onPrimaryContainer,
+                        icon: Icon(
+                          controller.showComposerPreview
+                              ? Icons.edit_outlined
+                              : Icons.preview_outlined,
+                        ),
+                        onPressed: controller.toggleComposerPreview,
+                      ),
+                    ),
                   Container(
                     height: height,
                     width: height,

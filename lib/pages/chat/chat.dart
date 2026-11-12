@@ -733,6 +733,13 @@ class ChatController extends State<ChatPageWithRoom>
 
   TextEditingController sendController = TextEditingController();
 
+  bool showComposerPreview = false;
+
+  void toggleComposerPreview() {
+    setState(() => showComposerPreview = !showComposerPreview);
+    if (!showComposerPreview) inputFocus.requestFocus();
+  }
+
   void setSendingClient(Client c) {
     // first cancel typing with the old sending client
     if (currentlyTyping) {
