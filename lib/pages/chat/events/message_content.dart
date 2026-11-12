@@ -15,6 +15,7 @@ import 'package:matrix/matrix.dart';
 
 import '../../../config/app_config.dart';
 import '../../../utils/event_checkbox_extension.dart';
+import '../../../utils/matrix_sdk_extensions/double_escaped_code_extension.dart';
 import '../../../utils/platform_infos.dart';
 import '../../../utils/url_launcher.dart';
 import 'audio_player.dart';
@@ -169,7 +170,7 @@ class MessageContent extends StatelessWidget {
               );
             }
             var html = AppSettings.renderHtml.value && event.isRichMessage
-                ? event.formattedText
+                ? event.formattedText.unescapeDoubleEscapedCode(event.body)
                 : event.body.replaceAll('<', '&lt;').replaceAll('>', '&gt;');
             if (event.messageType == MessageTypes.Emote) {
               html = '* $html';
