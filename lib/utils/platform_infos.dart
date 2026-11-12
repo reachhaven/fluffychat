@@ -103,6 +103,9 @@ abstract class PlatformInfos {
         ),
       ),
       applicationName: AppSettings.applicationName.value,
+      applicationLegalese: l10n.licenceNotice(
+        AppSettings.applicationName.value,
+      ),
     );
   }
 }

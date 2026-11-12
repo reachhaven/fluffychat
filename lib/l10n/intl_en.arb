@@ -2852,5 +2852,14 @@
                 "type": "String"
             }
         }
+    },
+    "licenceNotice": "{appName} is free software under the GNU Affero General Public License, version 3 or later, and comes with absolutely no warranty.\nFluffyChat © 2019 Christian Kußowski and the FluffyChat contributors.",
+    "@licenceNotice": {
+        "type": "String",
+        "placeholders": {
+            "appName": {
+                "type": "String"
+            }
+        }
     }
 }
