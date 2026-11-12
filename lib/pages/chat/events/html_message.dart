@@ -10,6 +10,7 @@ import 'package:fluffychat/config/themes.dart';
 import 'package:fluffychat/l10n/l10n.dart';
 import 'package:fluffychat/utils/code_highlight_theme.dart';
 import 'package:fluffychat/utils/event_checkbox_extension.dart';
+import 'package:fluffychat/utils/fluffy_share.dart';
 import 'package:fluffychat/widgets/avatar.dart';
 import 'package:fluffychat/widgets/future_loading_dialog.dart';
 import 'package:fluffychat/widgets/mxc_image.dart';
@@ -363,6 +364,12 @@ class HtmlMessage extends StatelessWidget {
           return const TextSpan(text: 'Unable to render code block!');
         }
 
+        final code = Text.rich(
+          TextSpan(children: [_renderCodeBlockNode(element)]),
+          style: codeTextStyle,
+          selectionColor: hightlightTextColor.withAlpha(128),
+        );
+
         return WidgetSpan(
           child: Material(
             color: atomOneBackgroundColor,
@@ -370,15 +377,49 @@ class HtmlMessage extends StatelessWidget {
               side: const BorderSide(color: hightlightTextColor),
               borderRadius: BorderRadius.circular(4),
             ),
-            child: Padding(
-              padding: isInline
-                  ? const EdgeInsets.symmetric(horizontal: 4.0)
-                  : const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-              child: Text.rich(
-                TextSpan(children: [_renderCodeBlockNode(element)]),
-                selectionColor: hightlightTextColor.withAlpha(128),
-              ),
-            ),
+            child: isInline
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    child: code,
+                  )
+                : Stack(
+                    children: [
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(minHeight: 40),
+                        child: Align(
+                          alignment: AlignmentDirectional.centerStart,
+                          widthFactor: 1,
+                          heightFactor: 1,
+                          child: Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                              8,
+                              4,
+                              40,
+                              4,
+                            ),
+                            child: code,
+                          ),
+                        ),
+                      ),
+                      PositionedDirectional(
+                        top: 0,
+                        end: 0,
+                        child: IconButton(
+                          tooltip: L10n.of(context).copyToClipboard,
+                          icon: const Icon(Icons.copy_outlined, size: 16),
+                          color: hightlightTextColor,
+                          visualDensity: VisualDensity.compact,
+                          onPressed: () => FluffyShare.share(
+                            node.text.endsWith('\n')
+                                ? node.text.substring(0, node.text.length - 1)
+                                : node.text,
+                            context,
+                            copyOnly: true,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
           ),
         );
       case 'img':
