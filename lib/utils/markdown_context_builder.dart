@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'package:fluffychat/l10n/l10n.dart';
+import 'package:fluffychat/utils/markdown_formatting_extension.dart';
 import 'package:fluffychat/widgets/adaptive_dialogs/show_text_input_dialog.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -145,7 +146,21 @@ class MarkdownContextBuilder extends StatelessWidget {
               ContextMenuController.removeAny();
             },
           ),
+          ContextMenuButtonItem(
+            label: l10n.inlineCode,
+            onPressed: () {
+              controller.value = controller.value.wrapInline('`');
+              ContextMenuController.removeAny();
+            },
+          ),
         ],
+        ContextMenuButtonItem(
+          label: l10n.codeBlock,
+          onPressed: () {
+            controller.value = controller.value.wrapInCodeBlock();
+            ContextMenuController.removeAny();
+          },
+        ),
       ],
     );
   }
