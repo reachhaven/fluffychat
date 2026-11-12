@@ -6,6 +6,10 @@
 import 'package:flutter/widgets.dart';
 
 const hightlightTextColor = Color(0xffabb2bf);
+const codeTextStyle = TextStyle(
+  fontFamily: 'monospace',
+  fontFamilyFallback: ['RobotoMono', 'Menlo', 'Consolas'],
+);
 const atomOneBackgroundColor = Color(0xff282c34);
 const atomOneDarkTheme = {
   'root': TextStyle(color: hightlightTextColor),
