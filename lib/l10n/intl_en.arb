@@ -2852,5 +2852,7 @@
                 "type": "String"
             }
         }
-    }
+    },
+    "inlineCode": "Code",
+    "codeBlock": "Code block"
 }
