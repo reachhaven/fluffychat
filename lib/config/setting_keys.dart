@@ -56,6 +56,8 @@ enum AppSettings<T> {
   defaultHomeserver<String>('chat.fluffy.default_homeserver', 'matrix.org'),
   // colorSchemeSeed stored as ARGB int
   colorSchemeSeedInt<int>('chat.fluffy.color_scheme_seed', 0xFF5625BA),
+  colorSchemeLight<Map<String, Object?>>('chat.fluffy.color_scheme_light', {}),
+  colorSchemeDark<Map<String, Object?>>('chat.fluffy.color_scheme_dark', {}),
   emojiSuggestionLocale<String>('emoji_suggestion_locale', ''),
   enableSoftLogout<bool>('chat.fluffy.enable_soft_logout', true),
   enableMatrixNativeOIDC<bool>('chat.fluffy.enable_matrix_native_oidc', true),
@@ -241,6 +243,10 @@ extension AppSettingsDoubleExtension on AppSettings<double> {
   }
 
   Future<void> setItem(double value) => AppSettings.store.setDouble(key, value);
+}
+
+extension AppSettingsMapExtension on AppSettings<Map<String, Object?>> {
+  Map<String, Object?> get value => defaultValue;
 }
 
 extension AppSettingsStringListExtension on AppSettings<List<String>> {
