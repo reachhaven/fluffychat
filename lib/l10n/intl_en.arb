@@ -2854,5 +2854,7 @@
         }
     },
     "inlineCode": "Code",
-    "codeBlock": "Code block"
+    "codeBlock": "Code block",
+    "preview": "Preview",
+    "nothingToPreview": "Nothing to preview yet."
 }
