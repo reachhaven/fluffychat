@@ -36,8 +36,6 @@ abstract class AppConfig {
   static const String windowsNotificationGuid =
       '4894dfda-c70a-4ebc-b139-acae55f3988d';
 
-  static const String sourceCodeUrl =
-      'https://github.com/krille-chan/fluffychat';
   static const String supportUrl =
       'https://github.com/krille-chan/fluffychat/issues';
   static const String changelogUrl = 'https://fluffychat.im/changelog/';

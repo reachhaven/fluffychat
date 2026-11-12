@@ -13,8 +13,6 @@ import 'package:material_ui/material_ui.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import '../config/app_config.dart';
-
 abstract class PlatformInfos {
   static bool get isWeb => kIsWeb;
   static bool get isLinux => !kIsWeb && Platform.isLinux;
@@ -65,7 +63,7 @@ abstract class PlatformInfos {
       children: [
         Text(l10n.versionWithNumber(version)),
         TextButton.icon(
-          onPressed: () => launchUrlString(AppConfig.sourceCodeUrl),
+          onPressed: () => launchUrlString(AppSettings.sourceCodeUrl.value),
           icon: const Icon(Icons.source_outlined),
           label: Text(l10n.sourceCode),
         ),

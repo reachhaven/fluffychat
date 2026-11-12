@@ -62,6 +62,10 @@ enum AppSettings<T> {
   presetHomeserver<String>('chat.fluffy.preset_homeserver', ''),
   welcomeText<String>('chat.fluffy.welcome_text', ''),
   website<String>('chat.fluffy.website_url', 'https://fluffychat.im'),
+  sourceCodeUrl<String>(
+    'chat.fluffy.source_code_url',
+    'https://github.com/krille-chan/fluffychat',
+  ),
   logoUrl<String>(
     'chat.fluffy.logo_url',
     'https://fluffychat.im/assets/favicon.png',
