@@ -56,6 +56,7 @@ enum AppSettings<T> {
   defaultHomeserver<String>('chat.fluffy.default_homeserver', 'matrix.org'),
   // colorSchemeSeed stored as ARGB int
   colorSchemeSeedInt<int>('chat.fluffy.color_scheme_seed', 0xFF5625BA),
+  borderRadius<double>('chat.fluffy.border_radius', 18.0),
   emojiSuggestionLocale<String>('emoji_suggestion_locale', ''),
   enableSoftLogout<bool>('chat.fluffy.enable_soft_logout', true),
   enableMatrixNativeOIDC<bool>('chat.fluffy.enable_matrix_native_oidc', true),
@@ -98,6 +99,9 @@ enum AppSettings<T> {
   T get defaultValue {
     final platformConfig = _platformConfiguration?[name];
     if (platformConfig is T) return platformConfig;
+    if (platformConfig is num && _defaultValue is double) {
+      return platformConfig.toDouble() as T;
+    }
     return _defaultValue;
   }
 

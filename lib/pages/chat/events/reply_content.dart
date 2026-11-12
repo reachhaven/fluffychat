@@ -22,7 +22,7 @@ class ReplyContent extends StatelessWidget {
     this.timeline,
   });
 
-  static const BorderRadius borderRadius = BorderRadius.only(
+  static BorderRadius get borderRadius => BorderRadius.only(
     topRight: Radius.circular(AppConfig.borderRadius / 2),
     bottomRight: Radius.circular(AppConfig.borderRadius / 2),
   );

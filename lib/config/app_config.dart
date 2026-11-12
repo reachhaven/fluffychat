@@ -3,7 +3,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'dart:math';
 import 'dart:ui';
+
+import 'package:fluffychat/config/setting_keys.dart';
 
 abstract class AppConfig {
   static const Color primaryColor = Color(0xFF261386);
@@ -19,8 +22,8 @@ abstract class AppConfig {
   static const String schemePrefix = 'matrix:';
   static const String pushNotificationsChannelId = 'fluffychat_push';
   static const String pushNotificationsAppId = 'chat.fluffy.fluffychat';
-  static const double borderRadius = 18.0;
-  static const double spaceBorderRadius = 11.0;
+  static double get borderRadius => AppSettings.borderRadius.value;
+  static double get spaceBorderRadius => min(11.0, borderRadius);
   static const double columnWidth = 360.0;
 
   static const String enablePushTutorial =

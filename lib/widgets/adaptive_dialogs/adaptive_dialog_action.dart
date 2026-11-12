@@ -15,14 +15,14 @@ class AdaptiveDialogAction extends StatelessWidget {
   final BorderRadius? borderRadius;
   final TargetPlatform? targetPlatform;
 
-  static const BorderRadius topRadius = BorderRadius.only(
+  static BorderRadius get topRadius => BorderRadius.only(
     topLeft: Radius.circular(AppConfig.borderRadius),
     topRight: Radius.circular(AppConfig.borderRadius),
     bottomLeft: Radius.circular(2),
     bottomRight: Radius.circular(2),
   );
   static const BorderRadius centerRadius = BorderRadius.all(Radius.circular(2));
-  static const BorderRadius bottomRadius = BorderRadius.only(
+  static BorderRadius get bottomRadius => BorderRadius.only(
     bottomLeft: Radius.circular(AppConfig.borderRadius),
     bottomRight: Radius.circular(AppConfig.borderRadius),
     topLeft: Radius.circular(2),
