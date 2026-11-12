@@ -160,7 +160,7 @@ class Message extends StatelessWidget {
           MessageTypes.Image,
           MessageTypes.Sticker,
         }.contains(event.messageType) &&
-        event.fileDescription == null &&
+        displayEvent.fileDescription == null &&
         !event.redacted);
 
     if (ownMessage) {

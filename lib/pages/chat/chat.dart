@@ -21,6 +21,7 @@ import 'package:fluffychat/pages/chat/utils/web_file_to_x_file.dart';
 import 'package:fluffychat/pages/chat_details/chat_details.dart';
 import 'package:fluffychat/utils/adaptive_bottom_sheet.dart';
 import 'package:fluffychat/utils/error_reporter.dart';
+import 'package:fluffychat/utils/file_description.dart';
 import 'package:fluffychat/utils/file_selector.dart';
 import 'package:fluffychat/utils/matrix_live_kit_calls/matrix_live_kit_call.dart';
 import 'package:fluffychat/utils/matrix_sdk_extensions/event_extension.dart';
@@ -752,16 +753,36 @@ class ChatController extends State<ChatPageWithRoom>
     Matrix.of(context).setActiveClient(c);
   });
 
+  Future<String?> _sendTextOrCaption(Event? editedFile, bool parseCommands) {
+    if (editedFile != null) {
+      return room.sendEvent(
+        editedFile.contentWithFileDescription(sendController.text),
+        editEventId: editEvent!.eventId,
+      );
+    }
+    return room.sendTextEvent(
+      sendController.text,
+      inReplyTo: replyEvent,
+      editEventId: editEvent?.eventId,
+      parseCommands: parseCommands,
+      threadRootEventId: activeThreadId,
+    );
+  }
+
   Future<void> send() async {
     final proceed = await showTrustUserInRoomDialog(context, room);
     if (!mounted || !proceed) return;
-    if (sendController.text.trim().isEmpty) return;
+    final editedEvent = editEvent?.getDisplayEvent(timeline!);
+    final editedFile = editedEvent?.isFileMessage == true ? editedEvent : null;
+    if (editedFile == null && sendController.text.trim().isEmpty) return;
     _storeInputTimeoutTimer?.cancel();
     final prefs = Matrix.of(context).store;
     prefs.remove('draft_$roomId');
     var parseCommands = true;
 
-    final commandMatch = RegExp(r'^\/(\w+)').firstMatch(sendController.text);
+    final commandMatch = editedFile == null
+        ? RegExp(r'^\/(\w+)').firstMatch(sendController.text)
+        : null;
     if (commandMatch != null &&
         !sendingClient.commands.keys.contains(commandMatch[1]!.toLowerCase())) {
       final l10n = L10n.of(context);
@@ -783,13 +804,7 @@ class ChatController extends State<ChatPageWithRoom>
     }
 
     // ignore: unawaited_futures
-    room.sendTextEvent(
-      sendController.text,
-      inReplyTo: replyEvent,
-      editEventId: editEvent?.eventId,
-      parseCommands: parseCommands,
-      threadRootEventId: activeThreadId,
-    );
+    _sendTextOrCaption(editedFile, parseCommands);
     sendController.value = TextEditingValue(
       text: pendingText,
       selection: const TextSelection.collapsed(offset: 0),
@@ -1222,7 +1237,8 @@ class ChatController extends State<ChatPageWithRoom>
   bool get canEditSelectedEvents {
     if (isArchived ||
         selectedEvents.length != 1 ||
-        !selectedEvents.first.status.isSent) {
+        !selectedEvents.first.status.isSent ||
+        selectedEvents.first.type == EventTypes.Sticker) {
       return false;
     }
     return currentRoomBundle.any(
@@ -1408,11 +1424,7 @@ class ChatController extends State<ChatPageWithRoom>
       editEvent = event;
       sendController.text = event
           .getDisplayEvent(timeline)
-          .calcLocalizedBodyFallback(
-            MatrixLocals(L10n.of(context)),
-            withSenderNamePrefix: false,
-            hideReply: true,
-          );
+          .editableText(MatrixLocals(L10n.of(context)));
       if (clearSelection) selectedEvents.clear();
     });
     inputFocus.requestFocus();
@@ -1672,11 +1684,7 @@ class ChatController extends State<ChatPageWithRoom>
   Future<void> _cancelEditWithConfirmation() async {
     final originalText = editEvent!
         .getDisplayEvent(timeline!)
-        .calcLocalizedBodyFallback(
-          MatrixLocals(L10n.of(context)),
-          withSenderNamePrefix: false,
-          hideReply: true,
-        );
+        .editableText(MatrixLocals(L10n.of(context)));
 
     if (sendController.text != originalText) {
       final result = await showOkCancelAlertDialog(
