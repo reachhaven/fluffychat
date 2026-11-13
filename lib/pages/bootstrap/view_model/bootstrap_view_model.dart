@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'package:file_picker/file_picker.dart';
+import 'package:fluffychat/config/setting_keys.dart';
 import 'package:fluffychat/utils/error_reporter.dart';
 import 'package:fluffychat/utils/localized_exception_extension.dart';
 import 'package:fluffychat/utils/platform_infos.dart';
@@ -140,6 +141,19 @@ class BootstrapViewModel extends ValueNotifier<BootstrapViewModelState> {
       }
     }
     notifyListeners();
+  }
+
+  bool get passphraseDisabled => !AppSettings.enableBackupPassphrase.value;
+
+  bool _passphraseSkipped = false;
+
+  bool get passphraseSkipFailed =>
+      _passphraseSkipped && !value.isLoading && value.recoveryKey == null;
+
+  Future<void> skipPassphraseIfDisabled(BuildContext context) async {
+    if (!passphraseDisabled || _passphraseSkipped) return;
+    _passphraseSkipped = true;
+    await setOrSkipPassphrase(null, context);
   }
 
   Future<void> setOrSkipPassphrase(

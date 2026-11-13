@@ -32,6 +32,13 @@ class BootstrapPage extends StatelessWidget {
             (_) => viewModel.goToRoomsPageAfterSuccess(context),
           );
         }
+        if (cryptoIdentityState != null &&
+            (!cryptoIdentityState.initialized || viewModel.value.reset) &&
+            viewModel.value.recoveryKey == null) {
+          WidgetsBinding.instance.addPostFrameCallback(
+            (_) => viewModel.skipPassphraseIfDisabled(context),
+          );
+        }
 
         final title = cryptoIdentityState == null
             ? L10n.of(context).loadingPleaseWait
@@ -46,7 +53,8 @@ class BootstrapPage extends StatelessWidget {
         return LoginScaffold(
           appBar: AppBar(
             automaticallyImplyLeading: false,
-            leading: viewModel.value.recoveryKey != null
+            leading:
+                viewModel.value.recoveryKey != null || viewModel.value.isLoading
                 ? null
                 : CloseButton(
                     onPressed: () async {
@@ -86,7 +94,10 @@ class BootstrapPage extends StatelessWidget {
               ? Center(child: CircularProgressIndicator.adaptive())
               : !cryptoIdentityState.initialized || viewModel.value.reset
               ? viewModel.value.recoveryKey == null
-                    ? NewPassphraseView(viewModel)
+                    ? viewModel.passphraseDisabled &&
+                              !viewModel.passphraseSkipFailed
+                          ? Center(child: CircularProgressIndicator.adaptive())
+                          : NewPassphraseView(viewModel)
                     : StoreRecoveryKeyView(viewModel)
               : RestoreBootstrapView(viewModel),
         );
