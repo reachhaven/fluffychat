@@ -986,7 +986,7 @@
         "type": "String",
         "placeholders": {}
     },
-    "inviteText": "{username} invited you to FluffyChat.\n1. Visit fluffychat.im and install the app \n2. Sign up or sign in \n3. Open the invite link: \n {link}",
+    "inviteText": "{username} invited you to {appName}.\n1. Visit {website} and install the app \n2. Sign up or sign in \n3. Open the invite link: \n {link}",
     "@inviteText": {
         "type": "String",
         "placeholders": {
@@ -994,6 +994,12 @@
                 "type": "String"
             },
             "link": {
+                "type": "String"
+            },
+            "appName": {
+                "type": "String"
+            },
+            "website": {
                 "type": "String"
             }
         }
@@ -1147,10 +1153,14 @@
         "type": "String",
         "placeholders": {}
     },
-    "newMessageInFluffyChat": "💬 New message in FluffyChat",
+    "newMessageInFluffyChat": "💬 New message in {appName}",
     "@newMessageInFluffyChat": {
         "type": "String",
-        "placeholders": {}
+        "placeholders": {
+            "appName": {
+                "type": "String"
+            }
+        }
     },
     "newVerificationRequest": "New verification request!",
     "@newVerificationRequest": {
@@ -2542,7 +2552,15 @@
     "advancedConfigurations": "Advanced configurations",
     "signIn": "Sign in",
     "createNewAccount": "Create new account",
-    "signUpGreeting": "FluffyChat is decentralized! Select a server where you want to create your account and let's go!",
+    "signUpGreeting": "{appName} is decentralized! Select a server where you want to create your account and let's go!",
+    "@signUpGreeting": {
+        "type": "String",
+        "placeholders": {
+            "appName": {
+                "type": "String"
+            }
+        }
+    },
     "signInGreeting": "You already have an account in Matrix? Welcome back! Select your homeserver and sign in.",
     "theProcessWasCanceled": "The process was canceled.",
     "join": "Join",
@@ -2656,10 +2674,14 @@
         "type": "String",
         "placeholders": {}
     },
-    "newPassphraseDescription": "FluffyChat uses end to end encryption. To not lose your messages, please choose a strong passphrase to secure your crypto identity and your encrypted message backup.",
+    "newPassphraseDescription": "{appName} uses end to end encryption. To not lose your messages, please choose a strong passphrase to secure your crypto identity and your encrypted message backup.",
     "@newPassphraseDescription": {
         "type": "String",
-        "placeholders": {}
+        "placeholders": {
+            "appName": {
+                "type": "String"
+            }
+        }
     },
     "newPassphrase": "New passphrase",
     "@newPassphrase": {

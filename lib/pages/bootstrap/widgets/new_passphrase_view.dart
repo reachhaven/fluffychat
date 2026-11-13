@@ -3,6 +3,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'package:fluffychat/config/setting_keys.dart';
 import 'package:fluffychat/l10n/l10n.dart';
 import 'package:fluffychat/pages/bootstrap/view_model/bootstrap_view_model.dart';
 import 'package:material_ui/material_ui.dart';
@@ -25,7 +26,12 @@ class NewPassphraseView extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16.0),
       children: [
-        Text(L10n.of(context).newPassphraseDescription, textAlign: .center),
+        Text(
+          L10n.of(
+            context,
+          ).newPassphraseDescription(AppSettings.applicationName.value),
+          textAlign: .center,
+        ),
         const SizedBox(height: 16),
         TextField(
           obscureText: viewModel.value.obscureText,

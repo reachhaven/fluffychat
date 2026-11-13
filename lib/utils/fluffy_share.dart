@@ -3,6 +3,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'package:fluffychat/config/setting_keys.dart';
 import 'package:fluffychat/l10n/l10n.dart';
 import 'package:fluffychat/utils/platform_infos.dart';
 import 'package:flutter/services.dart';
@@ -47,6 +48,8 @@ abstract class FluffyShare {
       l10n.inviteText(
         ownProfile.displayName ?? client.userID!,
         'https://matrix.to/#/${client.userID}?client=im.fluffychat',
+        AppSettings.applicationName.value,
+        AppSettings.website.value,
       ),
       context,
     );
